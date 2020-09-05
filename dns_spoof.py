@@ -15,10 +15,10 @@ def get_arguments():
 
 def create_queue():
     # targetting
-    subprocess.call('iptables -I FORWARD -j NFQUEUE --queue-num 0', shell=True)
+    # subprocess.call('iptables -I FORWARD -j NFQUEUE --queue-num 0', shell=True)
     # local
-    # subprocess.call('iptables -I OUTPUT -j NFQUEUE --queue-num 0', shell=True)
-    # subprocess.call('iptables -I INPUT -j NFQUEUE --queue-num 0', shell=True)
+    subprocess.call('iptables -I OUTPUT -j NFQUEUE --queue-num 0', shell=True)
+    subprocess.call('iptables -I INPUT -j NFQUEUE --queue-num 0', shell=True)
 
 
 def remove_queue():
