@@ -28,7 +28,6 @@ class Listener:
 
     def execute_remotely(self, command):
         self.reliable_send(command)
-
         if command[0] == 'exit':
             self.connection.close()
             exit()
@@ -53,13 +52,12 @@ class Listener:
                 if command[0] == 'upload':
                     file_content = self.read_file(command[1])
                     command.append(file_content)
-
                 result = self.execute_remotely(command)
 
                 if command[0] == 'download' and '[-] Error' not in result:
                     result = self.write_file(command[1], result)
-            except Exception:
-                result = '[-] Error during command execution.'
+            except Exception as e:
+                result = '[-] Error during command execution. \n\n' + str(e)
             print(result)
 
 
