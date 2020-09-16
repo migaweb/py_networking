@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import requests
 import re
-import urlparse
+import urllib.parse as urlparse
 
 target_url = 'http://10.0.2.5/mutillidae/'
 target_links = []
@@ -11,7 +11,7 @@ max_rec = 2
 def extract_links_from(url):
     response = requests.get(url)
     if response and response.status_code == 200:
-        return re.findall('(?:href=")(.*?)"', response.content)
+        return re.findall('(?:href=")(.*?)"', response.content.decode(errors="ignore"))
     else:
         return []
 
